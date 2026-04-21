@@ -20,9 +20,9 @@ PERU_TZ       = timezone(timedelta(hours=-5))
 
 ESTACIONES = [
     {
-        "nombre":        "Usupallares",
-        "location_code": "USUPALLARES",
-        "lat": -9.55422, "lng": -77.07305, "buffer_m": 1000,
+        "nombre":        "Q-Taj Prima",
+        "location_code": "Q_TAJ_prima",
+        "lat": -9.5609, "lng": -77.07220, "buffer_m": 1000,
     },
     {
         "nombre":        "Dos Cruces",
@@ -367,7 +367,7 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
   <div class="legend-map">
     <div class="li"><div class="dot" style="background:#22c55e"></div><span>&lt; 100 μg/m³ Bajo</span></div>
     <div class="li"><div class="dot" style="background:#ef4444"></div><span>&gt; 100 μg/m³ Muy Alto</span></div>
-    <div class="li">Buffer: Dos Cruces / Tucush / Usupallares / Quebrada = 1km</div>
+    <div class="li">Buffer: Dos Cruces / Tucush / Q-Taj-Prima / Quebrada = 1km</div>
   </div>
 
 </div>
