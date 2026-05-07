@@ -20,7 +20,7 @@ PERU_TZ       = timezone(timedelta(hours=-5))
 
 ESTACIONES = [
     {
-        "nombre":        "Q-Taj'",
+        "nombre":        "Q-TAJ'",
         "location_code": "Q_TAJ_prima",
         "lat": -9.5609, "lng": -77.07220, "buffer_m": 1000,
     },
@@ -494,10 +494,10 @@ CHART_DATA.forEach((est, i) => {{
       x: est.pron.map(d => d.x),
       y: est.pron.map(d => d.y),
       type:'scatter', mode:'lines+markers',
-      line:{{ color:'#0070A3', width:2.5 }},
+      line:{{ color:'#0070A3', width:3 }},
       marker:{{
         color: '#0070A3',
-        size:5,
+        size:7,
         symbol:'circle'
       }},
       hovertemplate:'%{{x}}<br>%{{y:.2f}} μg/m³<extra></extra>',
