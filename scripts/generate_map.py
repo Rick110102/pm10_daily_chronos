@@ -149,7 +149,7 @@ def generar_mapa(resultados):
                 Hora máx: <b>{est['max_time'].strftime('%H:%M') if est['max_time'] else '—'}</b><br>
                 Buffer: <b>{km:.0f} km</b>
                 </div>""", max_width=220),
-            tooltip=f"{est['nombre']} · Prom: {est["avg_val"]:.2f} μg/m³"
+            tooltip=f"{est['nombre']} · Prom: {est['avg_val']:.2f} μg/m³"
         ).add_to(m)
 
         folium.Marker(
