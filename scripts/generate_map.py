@@ -34,11 +34,11 @@ ESTACIONES = [
         "location_code": "QUEBRADA",
         "lat": -9.55501, "lng": -77.08584, "buffer_m": 1000,
     },
-    {
-        "nombre":        "Tucush",
-        "location_code": "TUCUSH",
-        "lat": -9.51011, "lng": -77.05715, "buffer_m": 1000,
-    },
+    # {
+    #     "nombre":        "Tucush",
+    #     "location_code": "TUCUSH",
+    #     "lat": -9.51011, "lng": -77.05715, "buffer_m": 1000,
+    # },
 ]
 
 # ══════════════════════════════════════════════════════════
@@ -105,8 +105,8 @@ def procesar(items, corte_dt):
     return observados, pronostico
 
 def get_color(val):
-    if val > 100: return "#ef4444", "MUY ALTO",  "🔴"
-    return             "#22c55e",  "BAJO",        "🟢"
+    if val > 100: return "#ef4444", "NO CUMPLE",  "🔴"
+    return             "#22c55e",  "CUMPLE",        "🟢"
 
 # ══════════════════════════════════════════════════════════
 # MAPA FOLIUM
@@ -116,7 +116,7 @@ def generar_mapa(resultados):
     lng_c = sum(e["lng"] for e in ESTACIONES) / len(ESTACIONES)
     m = folium.Map(
         location=[lat_c, lng_c],
-        zoom_start=13,
+        zoom_start=14.5, # Anterior 13- cambio del 04/05/2026, cambio a 15 de ZOOM
         tiles="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         attr = "Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics",
         zoom_control=True
@@ -149,15 +149,15 @@ def generar_mapa(resultados):
                 Hora máx: <b>{est['max_time'].strftime('%H:%M') if est['max_time'] else '—'}</b><br>
                 Buffer: <b>{km:.0f} km</b>
                 </div>""", max_width=220),
-            tooltip=f"{est['nombre']} · Prom: {est['avg_val']:.2f} μg/m³"
+            tooltip=f"{est['nombre']} · Prom: {est["avg_val"]:.2f} μg/m³"
         ).add_to(m)
 
         folium.Marker(
             location=[est["lat"], est["lng"]],
             icon=folium.DivIcon(
                 html=f"""<div style="
-                    font-family:'Share Tech Mono',monospace;
-                    font-size:10px;
+                    font-family:'Inter', sans-serif;
+                    font-size:11px;
                     color:#ffffff;
                     white-space:nowrap;
                     pointer-events:none;
@@ -196,7 +196,7 @@ def preparar_chart_data(resultados):
 # ══════════════════════════════════════════════════════════
 def generar_html(resultados, mapa_render, now_peru, hora_corte):
     chart_data = preparar_chart_data(resultados)
-    fecha_act  = now_peru.strftime("%d/%m/%Y %H:%M")
+    fecha_act  = now_peru.strftime("%d/%m/%Y - %H:%M")
 
     return f"""<!DOCTYPE html>
 <html lang="es">
@@ -206,7 +206,8 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
   <meta http-equiv="refresh" content="3600"/>
   <title>Monitor PM10 · Antamina . Chronos</title>
   <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
   <style>
     :root {{
       --bg:     #E3E3E3;
@@ -220,7 +221,7 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
     * {{ margin:0; padding:0; box-sizing:border-box; }}
     html, body {{
       height:100%; background:var(--bg);
-      color:var(--text); font-family:'Barlow',sans-serif;
+      color:var(--text); font-family:'Inter',sans-serif;
       overflow:hidden;
     }}
     header {{
@@ -231,19 +232,19 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
       display:flex; align-items:center; gap:16px;
     }}
     .logo {{
-      font-family:'Share Tech Mono',monospace;
+      font-family:'Inter',sans-serif;
       font-size:20px; color:var(--accent); letter-spacing:2px;
     }}
     .hdr-right {{
       margin-left:auto;
-      font-family:'Share Tech Mono',monospace;
+      font-family:'Inter',sans-serif;
       font-size:11px; color:var(--muted);
       display:flex; gap:20px;
     }}
     .hdr-right span {{ color:var(--accent); }}
     .body {{
       display:grid;
-      grid-template-columns: 40% 60%;
+      grid-template-columns: 45% 55%;
       grid-template-rows: calc(100vh - 84px) 36px;
       height:calc(100vh - 48px);
     }}
@@ -261,12 +262,18 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
     }}
     .chart-block {{ flex-shrink:0; }}
     .chart-label {{
-      font-family:'Share Tech Mono',monospace;
+      font-family:'Inter',sans-serif;
       font-size:12px; color:var(--accent);
       letter-spacing:1px; margin-bottom:2px;
       padding-left:2px;
     }}
-    .plotly-div {{ width:100%; height:180px; }}
+    .plotly-div {{
+      width:100%;
+      height:250px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #BBBBBB;
+      bakground: #E3E3E3 }}
     .map-panel {{
       grid-column:2; grid-row:1;
       overflow:hidden; position:relative;
@@ -283,7 +290,7 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
       display:flex; align-items:center;
       justify-content:center;
       padding:0 10px; gap:16px;
-      font-family:'Share Tech Mono',monospace;
+      font-family:'Inter',sans-serif;
       font-size:9px; color:var(--muted);
     }}
     #cards-overlay {{
@@ -302,7 +309,7 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
       border: 1px solid #1e2d3d;
       border-radius: 4px;
       padding: 4px 10px;
-      font-family: 'Share Tech Mono', monospace;
+      font-family: 'Inter', sans-serif;
       font-size: 14px;
       color: #1a1a1a;
       white-space: nowrap;
@@ -315,11 +322,40 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
       font-weight: 600;
       color: #0070A3;
     }}
+
+
+    .prom-grupo{{
+      background: rgba(227, 227, 227);
+      border: 1.5px solid #1A1A1A;
+      border-radius: 4px;
+      padding: 4px 14px;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }}
+    .prom-grupo-titulo {{
+      font-size: 9px;
+      font-weight: 600;
+      color: #000000;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-bottom: 1px solid #000000;
+      padding-bottom: 3px;
+      margin-bottom: 2px;
+    }}
+    .prom-grupo-items {{
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+    }}
+
+
     .li {{ display:flex; align-items:center; gap:5px; }}
-    .line-solid {{ width:20px; height:2px; background:#283552; }}
+    .line-solid {{ width:20px; height:2px; background:#1A1A1A; }}
     .line-pron  {{ width:20px; height:2px; background:#0070A3; }}
     .line-corte {{ width:2px; height:12px; background:#E88D00; }}
-    .dot-max    {{ width:8px; height:8px; border-radius:50%; background:#850B0B; }}
+    .dot-max    {{ width:8px; height:8px; border-radius:50%; background:#000000; }}
     .legend-map {{
       grid-column:2; grid-row:2;
       background:var(--legend);
@@ -327,7 +363,7 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
       display:flex; align-items:center;
       justify-content:center;
       padding:0 14px; gap:16px;
-      font-family:'Share Tech Mono',monospace;
+      font-family:'Inter', sans-serif;
       font-size:9px; color:var(--muted);
     }}
     .dot {{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }}
@@ -338,11 +374,11 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
 <body>
 
 <header>
-  <div class="logo">ANTAMINA - MONITOR PM10</div>
+  <div class="logo">PROYECCIÓN DIARIA PM10</div>
   <div class="hdr-right">
     <div>Corte: <span>{hora_corte}</span></div>
-    <div>Actualizado: <span>{fecha_act}</span> (Perú)</div>
-    <div>Próx. ~1h</div>
+    <div>Actualizado: <span>{fecha_act}</span></div>
+    <div>Próx. Act. en 1h</div>
   </div>
 </header>
 
@@ -365,9 +401,8 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
   </div>
 
   <div class="legend-map">
-    <div class="li"><div class="dot" style="background:#22c55e"></div><span>&lt; 100 μg/m³ Bajo</span></div>
-    <div class="li"><div class="dot" style="background:#ef4444"></div><span>&gt; 100 μg/m³ Muy Alto</span></div>
-    <div class="li">Buffer: Dos Cruces / Tucush / Q-Taj-Prima / Quebrada = 1km</div>
+    <div class="li"><div class="dot" style="background:#22c55e"></div><span>&lt; 100 μg/m³ Cumple</span></div>
+    <div class="li"><div class="dot" style="background:#ef4444"></div><span>&gt; 100 μg/m³ No cumple</span></div>
   </div>
 
 </div>
@@ -375,16 +410,16 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
 <script>
 const CHART_DATA = {chart_data};
 const HORA_CORTE = "{hora_corte}";
-const EJE_X_FIJO = CHART_DATA[0].eje_x;
+const EJE_X_FIJO = CHART_DATA.length > 0? CHART_DATA[0].eje_x : [];
 
 const LAYOUT_BASE = {{
-  paper_bgcolor: '#E3E3E3',
+  paper_bgcolor: '#CECECE',
   plot_bgcolor:  '#E3E3E3',
-  font:   {{ family:'Share Tech Mono, monospace', size:9, color:'#c9d8e8' }},
+  font:   {{ family: 'Inter, sans-serif', size:11, color:'#c9d8e8' }},
   margin: {{ t:8, r:8, b:38, l:40 }},
   xaxis: {{
     showgrid:true, gridcolor:'#BBBBBB', gridwidth:1,
-    tickfont:{{ size:9 }}, color:'#333333', tickangle:-45,
+    tickfont:{{ size: 10}}, color:'#333333', tickangle:-45,
     type:'category',
     categoryorder:'array',
     categoryarray: EJE_X_FIJO,
@@ -392,8 +427,8 @@ const LAYOUT_BASE = {{
   }},
   yaxis: {{
     showgrid:true, gridcolor:'#BBBBBB', gridwidth:1,
-    tickfont:{{ size:9 }}, color:'#333333', rangemode:'tozero',
-    title:{{ text:'μg/m³', font:{{ size:9, color:'#292929' }} }}
+    tickfont:{{ size:10 }}, color:'#333333', rangemode:'tozero',
+    title:{{ text:'μg/m³', font:{{ size:10, color:'#292929' }} }}
   }},
   showlegend: false,
 }};
@@ -401,14 +436,28 @@ const LAYOUT_BASE = {{
 const scroll = document.getElementById('charts-scroll');
 
 const overlay = document.getElementById('cards-overlay');
+const grupo = document.createElement('div');
+grupo.className = 'prom-grupo';
+
+const titulo = document.createElement('div');
+titulo.className = 'prom-grupo-titulo';
+titulo.textContent = 'PM10 diario proyectado';
+grupo.appendChild(titulo);
+
+const items = document.createElement('div');
+items.className = 'prom-grupo-items';
+
 CHART_DATA.forEach(e => {{
   const card = document.createElement('div');
   card.className = 'prom-card';
   card.innerHTML = `<span class="est-nombre">${{e.nombre}}</span>
                     &nbsp;:&nbsp;
                     <span class="est-valor">${{e.avg_val.toFixed(2)}} μg/m³</span>`;
-  overlay.appendChild(card);
+  items.appendChild(card);
 }});
+
+grupo.appendChild(items);
+overlay.appendChild(grupo);
 
 CHART_DATA.forEach((est, i) => {{
   const block = document.createElement('div');
@@ -430,9 +479,9 @@ CHART_DATA.forEach((est, i) => {{
       x: est.obs.map(d => d.x),
       y: est.obs.map(d => d.y),
       type:'scatter', mode:'lines+markers',
-      line:{{ color:'#283552', width:1.5 }},
+      line:{{ color:'#1A1A1A', width:1.5 }},
       marker:{{
-        color: '#283552',
+        color: '#1A1A1A',
         size: 4,
         symbol: 'circle',
       }},
@@ -459,11 +508,11 @@ CHART_DATA.forEach((est, i) => {{
     traces.push({{
       x:[est.max_time], y:[est.max_val],
       type:'scatter', mode:'markers+text',
-      marker:{{ color:'#850B0B', size:8, symbol:'circle',
+      marker:{{ color:'#000000', size:8, symbol:'circle',
                 line:{{ color:'#fff', width:1 }} }},
       text:[est.max_val.toFixed(2)],
       textposition:'bottom center',
-      textfont:{{ color:'#850B0B', size:12 }},
+      textfont:{{ color:'#000000', size:10 }},
       hovertemplate:'Máx: %{{y:.2f}} μg/m³<extra></extra>',
     }});
   }}
@@ -546,6 +595,11 @@ if __name__ == "__main__":
                 "buffer_m":est["buffer_m"], "avg_val":0, "max_val":0, "max_time":None,
                 "n_obs":0, "n_pron":0, "observados":[], "pronostico":[],
             })
+
+    resultados = [r for r in resultados if r["n_obs"] > 0 or r["n_pron"] > 0]
+    if not resultados:
+      print("Sin datos en ninguna estacion. HTML no generado")
+      exit()
 
     mapa_render = generar_mapa(resultados)
     html        = generar_html(resultados, mapa_render, now_peru, hora_corte)
