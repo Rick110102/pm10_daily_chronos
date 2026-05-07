@@ -20,7 +20,7 @@ PERU_TZ       = timezone(timedelta(hours=-5))
 
 ESTACIONES = [
     {
-        "nombre":        "Q-Taj Prima",
+        "nombre":        "Q-Taj'",
         "location_code": "Q_TAJ_prima",
         "lat": -9.5609, "lng": -77.07220, "buffer_m": 1000,
     },
@@ -30,7 +30,7 @@ ESTACIONES = [
         "lat": -9.56023, "lng": -77.05986, "buffer_m": 1000,
     },
     {
-        "nombre":        "Quebrada",
+        "nombre":        "Q-AN",
         "location_code": "QUEBRADA",
         "lat": -9.55501, "lng": -77.08584, "buffer_m": 1000,
     },
@@ -291,7 +291,7 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
       justify-content:center;
       padding:0 10px; gap:16px;
       font-family:'Inter',sans-serif;
-      font-size:9px; color:var(--muted);
+      font-size:14px; color:var(--muted);
     }}
     #cards-overlay {{
       position: absolute;
@@ -364,7 +364,7 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
       justify-content:center;
       padding:0 14px; gap:16px;
       font-family:'Inter', sans-serif;
-      font-size:9px; color:var(--muted);
+      font-size:14px; color:var(--muted);
     }}
     .dot {{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }}
     ::-webkit-scrollbar {{ width:3px; }}
@@ -494,10 +494,10 @@ CHART_DATA.forEach((est, i) => {{
       x: est.pron.map(d => d.x),
       y: est.pron.map(d => d.y),
       type:'scatter', mode:'lines+markers',
-      line:{{ color:'#0070A3', width:1.5 }},
+      line:{{ color:'#0070A3', width:2.5 }},
       marker:{{
         color: '#0070A3',
-        size:4,
+        size:5,
         symbol:'circle'
       }},
       hovertemplate:'%{{x}}<br>%{{y:.2f}} μg/m³<extra></extra>',
