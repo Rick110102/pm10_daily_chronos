@@ -25,7 +25,7 @@ ESTACIONES = [
         "lat": -9.5609, "lng": -77.07220, "buffer_m": 1000,
     },
     {
-        "nombre":        "Dos Cruces",
+        "nombre":        "Q-2C",
         "location_code": "2CRUCES",
         "lat": -9.56023, "lng": -77.05986, "buffer_m": 1000,
     },
