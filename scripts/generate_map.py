@@ -34,11 +34,11 @@ ESTACIONES = [
         "location_code": "QUEBRADA",
         "lat": -9.55501, "lng": -77.08584, "buffer_m": 1000,
     },
-    # {
-    #     "nombre":        "Tucush",
-    #     "location_code": "TUCUSH",
-    #     "lat": -9.51011, "lng": -77.05715, "buffer_m": 1000,
-    # },
+    {
+        "nombre":        "Usupallares",
+        "location_code": "USUPALLARES",
+        "lat": -9.55466, "lng": -77.0738, "buffer_m": 1000,
+    },
 ]
 
 # ══════════════════════════════════════════════════════════
@@ -103,9 +103,9 @@ def procesar(items, corte_dt):
     observados.sort(key=lambda x: x["time"])
     pronostico.sort(key=lambda x: x["time"])
     return observados, pronostico
-
+# Se cambió el valor de > 100 a 150
 def get_color(val):
-    if val > 100: return "#ef4444", "NO CUMPLE",  "🔴"
+    if val > 150: return "#ef4444", "NO CUMPLE",  "🔴"
     return             "#22c55e",  "CUMPLE",        "🟢"
 
 # ══════════════════════════════════════════════════════════
@@ -401,8 +401,8 @@ def generar_html(resultados, mapa_render, now_peru, hora_corte):
   </div>
 
   <div class="legend-map">
-    <div class="li"><div class="dot" style="background:#22c55e"></div><span>&lt; 100 μg/m³ Cumple</span></div>
-    <div class="li"><div class="dot" style="background:#ef4444"></div><span>&gt; 100 μg/m³ No cumple</span></div>
+    <div class="li"><div class="dot" style="background:#22c55e"></div><span>&lt; 150 μg/m³ Cumple</span></div>
+    <div class="li"><div class="dot" style="background:#ef4444"></div><span>&gt; 150 μg/m³ No cumple</span></div>
   </div>
 
 </div>
